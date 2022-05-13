@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 
-type NumberFields = "elementsCount" | "selectedStars" | "selectedClues";
+type NumberFields =
+  | "elementsCount"
+  | "slotsCount"
+  | "selectedStars"
+  | "selectedClues";
 export interface HistoryItem {
   elements: number[];
   stars: number;
@@ -10,6 +14,7 @@ export const usePuzzleStore = defineStore("puzzle", {
   state: () => {
     return {
       elementsCount: 6,
+      slotsCount: 4,
       selected: [1, 2, 3, 4] as (number | undefined)[],
       selectedStars: 0,
       selectedClues: 0,
@@ -55,18 +60,32 @@ export const usePuzzleStore = defineStore("puzzle", {
     limitedIncrement(key: NumberFields, limit: number) {
       if (this[key] < limit) {
         this[key]++;
+        return true;
       }
+      return false;
     },
     limitedDecrement(key: NumberFields, limit: number) {
       if (this[key] > limit) {
         this[key]--;
+        return true;
       }
+      return false;
     },
     incrementCount() {
       this.limitedIncrement("elementsCount", 8);
     },
     decrementCount() {
       this.limitedDecrement("elementsCount", 4);
+    },
+    incrementSlotsCount() {
+      if (this.limitedIncrement("slotsCount", 6)) {
+        this.selected.push(undefined);
+      }
+    },
+    decrementSlotsCount() {
+      if (this.limitedDecrement("slotsCount", 3)) {
+        this.selected.splice(-1, 1);
+      }
     },
     incrementStars() {
       this.limitedIncrement("selectedStars", this.selected.length);

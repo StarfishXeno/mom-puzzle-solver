@@ -25,7 +25,7 @@ body {
 }
 #app {
   color: #f9f5d7;
-  width: fit-content;
+  width: 800px;
   margin: 2em auto;
 }
 .row {
@@ -66,6 +66,7 @@ body {
   }
   #app {
     padding: 0.5em;
+    width: auto;
   }
 }
 </style>

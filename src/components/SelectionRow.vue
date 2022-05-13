@@ -14,6 +14,8 @@ const {
   decrementStars,
   incrementClues,
   decrementClues,
+  incrementSlotsCount,
+  decrementSlotsCount,
   removeSelected,
   addToHistory,
   reset,
@@ -47,6 +49,17 @@ const showSolutions = ref(false);
       </div>
     </div>
     <div class="buttons">
+      <div>
+        <button @click="incrementSlotsCount">+</button>
+        <button @click="decrementSlotsCount">-</button>
+      </div>
+    </div>
+  </div>
+  <div class="buttons extra">
+    <div>
+      <div v-if="validError" class="error-message">{{ validError }}</div>
+    </div>
+    <div class="buttons">
       <div class="stars">
         <label>
           {{ selectedStars }}x
@@ -66,7 +79,7 @@ const showSolutions = ref(false);
       </div>
     </div>
   </div>
-  <div v-if="validError" class="error-message">{{ validError }}</div>
+
   <div class="buttons control">
     <button @click="showSolutions = true" style="width: 20rem">
       FIND SOLUTIONS
@@ -96,7 +109,10 @@ const showSolutions = ref(false);
 .buttons button {
   padding: 0.7rem 0;
 }
-
+.buttons.extra {
+  margin-bottom: 1em;
+  justify-content: space-between;
+}
 .buttons.control button {
   width: 8rem;
   margin-left: 1rem;
@@ -109,7 +125,6 @@ const showSolutions = ref(false);
 }
 .error-message {
   color: #ffaaaa;
-  margin: 1em 0;
 }
 @media screen and (max-width: 500px) {
   .buttons {
@@ -118,6 +133,12 @@ const showSolutions = ref(false);
   .buttons.control {
     flex-direction: column;
     align-items: center;
+  }
+  .buttons.extra {
+    flex-direction: column;
+  }
+  .buttons.extra .buttons {
+    width: 100%;
   }
   .stars,
   .clues {
