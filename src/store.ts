@@ -75,7 +75,7 @@ export const usePuzzleStore = defineStore("puzzle", {
       this.limitedIncrement("elementsCount", 8);
     },
     decrementCount() {
-      this.limitedDecrement("elementsCount", 4);
+      this.limitedDecrement("elementsCount", 3);
     },
     incrementSlotsCount() {
       if (this.limitedIncrement("slotsCount", 6)) {

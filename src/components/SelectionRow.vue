@@ -143,7 +143,6 @@ const onElementClicked = (_: number, idx: number) => removeSelected(idx);
     flex-direction: column;
   }
   .stars-clues .buttons {
-    display: flex;
     width: 100%;
     justify-content: space-around;
   }
