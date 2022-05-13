@@ -36,7 +36,7 @@ export const usePuzzleStore = defineStore("puzzle", {
       }
     },
     reset() {
-      this.selected = Array(this.selected.length).fill(undefined);
+      this.selected = Array(this.slotsCount).fill(undefined);
       this.selectedClues = 0;
       this.selectedStars = 0;
     },

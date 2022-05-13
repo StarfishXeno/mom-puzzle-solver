@@ -5,8 +5,10 @@ import { computed } from "vue";
 import { findSolutions } from "@/solver";
 
 const store = usePuzzleStore();
-const { history, elements } = storeToRefs(store);
-const variants = computed(() => findSolutions(history.value, elements.value));
+const { history, elements, slotsCount } = storeToRefs(store);
+const variants = computed(() =>
+  findSolutions(history.value, elements.value, slotsCount.value)
+);
 const { setSelected } = store;
 const emit = defineEmits(["close"]);
 const acceptVariant = (variant: number[]) => {

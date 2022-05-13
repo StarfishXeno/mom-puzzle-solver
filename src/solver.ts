@@ -27,14 +27,14 @@ export const checkSolution = (history: HistoryItem[], selected: number[]) => {
         usedIndices.add(itemIdx);
       }
     }
-    if (allMatches < totalNeededMatches || allMatches > totalNeededMatches) {
+    if (allMatches != totalNeededMatches) {
       return `History item ${historyNumber} has ${totalNeededMatches} stars + clues, but solution has ${allMatches} matches`;
     }
   }
   return null;
 };
 
-const createAllPermutations = (elements: number[], length = 4) => {
+const createAllPermutations = (elements: number[], length: number) => {
   let res: number[][] = [];
   const permute = (length: number, parent: number[][]): number[][] => {
     if (length <= 1) {
@@ -55,8 +55,12 @@ const createAllPermutations = (elements: number[], length = 4) => {
   return res;
 };
 
-export const findSolutions = (history: HistoryItem[], elements: number[]) => {
-  const permutations = createAllPermutations(elements);
+export const findSolutions = (
+  history: HistoryItem[],
+  elements: number[],
+  length: number
+) => {
+  const permutations = createAllPermutations(elements, length);
   const viableSolutions = permutations.filter(
     (p) => !checkSolution(history, p)
   );
