@@ -13,12 +13,7 @@ export const usePuzzleStore = defineStore("puzzle", {
       selected: [1, 2, 3, 4] as (number | undefined)[],
       selectedStars: 0,
       selectedClues: 0,
-      history: [
-        { elements: [6, 2, 4, 5], stars: 0, clues: 2 },
-        { elements: [2, 3, 6, 5], stars: 1, clues: 2 },
-        { elements: [3, 4, 5, 6], stars: 0, clues: 3 },
-        { elements: [1, 2, 3, 4], stars: 0, clues: 2 },
-      ] as HistoryItem[],
+      history: [] as HistoryItem[],
     };
   },
 
