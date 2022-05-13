@@ -3,15 +3,19 @@ import { usePuzzleStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { findSolutions } from "@/solver";
+import ElementList from "./elements/ElementList.vue";
+import StyledButton from "./elements/StyledButton.vue";
 
+const MAX_LENGTH = 100;
 const store = usePuzzleStore();
 const { history, elements, slotsCount } = storeToRefs(store);
-const variants = computed(() =>
+const solutions = computed(() =>
   findSolutions(history.value, elements.value, slotsCount.value)
 );
+const visibleSolutions = computed(() => solutions.value.slice(0, MAX_LENGTH));
 const { setSelected } = store;
 const emit = defineEmits(["close"]);
-const acceptVariant = (variant: number[]) => {
+const acceptSolution = (variant: number[]) => {
   setSelected(variant);
   emit("close");
 };
@@ -20,16 +24,13 @@ const acceptVariant = (variant: number[]) => {
 <template>
   <div class="modal" @click="emit('close')">
     <div class="container" @click="$event.stopPropagation()">
-      <h1>Total variants: {{ variants.length }}</h1>
-      <div class="row" v-for="(elements, idx) in variants" :key="idx">
-        <div class="elements">
-          <div v-for="el in elements" :key="el" class="element selected">
-            {{ el }}
-          </div>
-        </div>
-        <div class="buttons">
-          <button @click="acceptVariant(elements)">ADD</button>
-        </div>
+      <h1>
+        Total solutions: {{ solutions.length }}
+        {{ solutions.length > MAX_LENGTH ? `(showing ${MAX_LENGTH})` : "" }}
+      </h1>
+      <div class="row" v-for="(elements, idx) in visibleSolutions" :key="idx">
+        <ElementList :elements="elements" check-selection />
+        <StyledButton @click="acceptSolution(elements)">add</StyledButton>
       </div>
     </div>
   </div>
@@ -46,15 +47,17 @@ const acceptVariant = (variant: number[]) => {
   justify-content: center;
   align-items: center;
 }
-.row {
-  margin-top: 0.5em;
-}
+
 .container {
   background: #1d2021;
   border: 1px solid #f9f5d7;
   padding: 1em;
   max-height: 80vh;
+  max-width: 90%;
   overflow-y: auto;
+}
+.container h1 {
+  margin-bottom: 0.5rem;
 }
 .buttons button {
   width: 5rem;

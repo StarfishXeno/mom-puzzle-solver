@@ -27,7 +27,7 @@ export const checkSolution = (history: HistoryItem[], selected: number[]) => {
         usedIndices.add(itemIdx);
       }
     }
-    if (allMatches != totalNeededMatches) {
+    if (allMatches !== totalNeededMatches) {
       return `History item ${historyNumber} has ${totalNeededMatches} stars + clues, but solution has ${allMatches} matches`;
     }
   }

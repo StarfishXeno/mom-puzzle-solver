@@ -5,7 +5,10 @@ import StarIcon from "./icons/StarIcon.vue";
 import ClueIcon from "./icons/ClueIcon.vue";
 import { computed, ref } from "vue";
 import { checkSolution } from "@/solver";
-import VariantsModal from "./VariantsModal.vue";
+import SolutionsModal from "./SolutionsModal.vue";
+import ElementList from "./elements/ElementList.vue";
+import IncrDecrButtons from "./elements/IncrDecrButtons.vue";
+import StyledButton from "./elements/StyledButton.vue";
 
 const store = usePuzzleStore();
 const { selected, history, selectedStars, selectedClues } = storeToRefs(store);
@@ -21,43 +24,35 @@ const {
   reset,
 } = store;
 const filledOut = computed(() => selected.value.every((s) => s));
-const validError = computed(
+const validationError = computed(
   () =>
     filledOut.value && checkSolution(history.value, selected.value as number[])
 );
 const showSolutions = ref(false);
+const onElementClicked = (_: number, idx: number) => removeSelected(idx);
 </script>
 
 <template>
-  <VariantsModal v-if="showSolutions" @close="showSolutions = false" />
+  <SolutionsModal v-if="showSolutions" @close="showSolutions = false" />
   <div class="row">
-    <div
-      class="elements"
+    <ElementList
+      :elements="selected"
       :class="{
-        valid: filledOut && !validError,
-        invalid: filledOut && validError,
+        valid: filledOut && !validationError,
+        invalid: filledOut && validationError,
       }"
-    >
-      <div
-        v-for="(el, idx) in selected"
-        :key="el"
-        class="element"
-        :class="{ selected: !!el }"
-        @click="removeSelected(idx)"
-      >
-        {{ el || "&nbsp;&nbsp;" }}
-      </div>
-    </div>
-    <div class="buttons">
-      <div>
-        <button @click="incrementSlotsCount">+</button>
-        <button @click="decrementSlotsCount">-</button>
-      </div>
-    </div>
+      @element-clicked="onElementClicked"
+      check-selection
+    />
+
+    <IncrDecrButtons
+      @increment="incrementSlotsCount"
+      @decrement="decrementSlotsCount"
+    />
   </div>
-  <div class="buttons extra">
-    <div>
-      <div v-if="validError" class="error-message">{{ validError }}</div>
+  <div class="stars-clues">
+    <div class="error-message">
+      {{ validationError || "" }}
     </div>
     <div class="buttons">
       <div class="stars">
@@ -65,35 +60,48 @@ const showSolutions = ref(false);
           {{ selectedStars }}x
           <StarIcon />
         </label>
-
-        <button @click="incrementStars">+</button>
-        <button @click="decrementStars">-</button>
+        <IncrDecrButtons
+          @increment="incrementStars"
+          @decrement="decrementStars"
+        />
       </div>
       <div class="clues">
         <label>
           {{ selectedClues }}x
           <ClueIcon />
         </label>
-        <button @click="incrementClues">+</button>
-        <button @click="decrementClues">-</button>
+        <IncrDecrButtons
+          @increment="incrementClues"
+          @decrement="decrementClues"
+        />
       </div>
     </div>
   </div>
 
-  <div class="buttons control">
-    <button @click="showSolutions = true" style="width: 20rem">
-      FIND SOLUTIONS
-    </button>
-    <button @click="reset">RESET</button>
-    <button :disabled="!filledOut" @click="addToHistory">ADD</button>
+  <div class="control-buttons">
+    <StyledButton style="width: 310px" @click="showSolutions = true">
+      find solutions
+    </StyledButton>
+    <StyledButton style="width: 130px" @click="reset">reset</StyledButton>
+    <StyledButton
+      style="width: 130px"
+      :disabled="!filledOut"
+      @click="addToHistory"
+    >
+      add
+    </StyledButton>
   </div>
 </template>
 <style scoped>
-.row {
-  margin: 1em 0;
+.stars-clues {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
-
-.buttons label {
+.stars-clues .buttons {
+  display: flex;
+}
+.stars-clues label {
   font-size: 2em;
   display: flex;
   align-items: center;
@@ -102,47 +110,53 @@ const showSolutions = ref(false);
 .stars,
 .clues {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.buttons {
-  justify-content: end;
-}
-.buttons button {
-  padding: 0.7rem 0;
-}
-.buttons.extra {
-  margin-bottom: 1em;
-  justify-content: space-between;
-}
-.buttons.control button {
-  width: 8rem;
-  margin-left: 1rem;
-}
-.invalid .element {
+
+.invalid:deep() .element {
   background: #ffaaaa;
 }
-.valid .element {
+.valid:deep() .element {
   background: #aaffaa;
 }
 .error-message {
   color: #ffaaaa;
+  max-width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+.control-buttons {
+  display: flex;
+  column-gap: 0.5rem;
+  justify-content: end;
+}
+
 @media screen and (max-width: 500px) {
-  .buttons {
-    justify-content: space-between;
-  }
-  .buttons.control {
+  .stars-clues {
     flex-direction: column;
     align-items: center;
   }
-  .buttons.extra {
-    flex-direction: column;
-  }
-  .buttons.extra .buttons {
-    width: 100%;
-  }
   .stars,
   .clues {
-    display: block;
+    flex-direction: column;
+  }
+  .stars-clues .buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+  }
+  .error-message {
+    max-width: 100%;
+    text-align: center;
+  }
+  .control-buttons {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
   }
 }
 </style>

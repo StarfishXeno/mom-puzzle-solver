@@ -4,6 +4,8 @@ import { storeToRefs } from "pinia";
 import StarIcon from "./icons/StarIcon.vue";
 import ClueIcon from "./icons/ClueIcon.vue";
 import TrashIcon from "./icons/TrashIcon.vue";
+import ElementList from "./elements/ElementList.vue";
+import StyledButton from "./elements/StyledButton.vue";
 
 const store = usePuzzleStore();
 const { history } = storeToRefs(store);
@@ -11,30 +13,30 @@ const { removeFromHistory, resetHistory } = store;
 </script>
 
 <template>
-  <div class="row" v-for="(item, idx) in history" :key="idx">
-    <div class="elements">
-      <div class="item-number">{{ history.length - idx }}.</div>
+  <div v-for="(item, idx) in history" :key="idx">
+    <div class="item-number">{{ history.length - idx }}.</div>
+    <div class="row">
+      <ElementList :elements="item.elements" check-selection />
 
-      <div v-for="el in item.elements" :key="el" class="element selected">
-        {{ el }}
+      <div class="results">
+        <StarIcon v-for="(_, idx) in Array(item.stars).fill(0)" :key="idx" />
+        <ClueIcon v-for="(_, idx) in Array(item.clues).fill(0)" :key="idx" />
+      </div>
+      <div class="buttons">
+        <StyledButton style="width: 65px" @click="removeFromHistory(idx)">
+          <TrashIcon />
+        </StyledButton>
       </div>
     </div>
-    <div class="results">
-      <StarIcon v-for="(_, idx) in Array(item.stars).fill(0)" :key="idx" />
-      <ClueIcon v-for="(_, idx) in Array(item.clues).fill(0)" :key="idx" />
-    </div>
-    <div class="buttons">
-      <button @click="removeFromHistory(idx)"><TrashIcon /></button>
-    </div>
   </div>
-  <div class="buttons control">
-    <button
+  <div class="control-buttons">
+    <StyledButton
+      style="width: 130px"
       @click="resetHistory"
-      class="reset-button"
       :disabled="history.length === 0"
     >
-      RESET
-    </button>
+      reset
+    </StyledButton>
   </div>
 </template>
 <style scoped>
@@ -45,39 +47,26 @@ const { removeFromHistory, resetHistory } = store;
   display: flex;
   align-items: center;
 }
-.buttons {
-  display: flex;
-  justify-content: end;
-}
-.buttons button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.row button {
-  padding: 0;
-  height: 100%;
-}
-.reset-button {
-  width: 8rem;
-  padding: 0.7rem 0;
-}
+
 .item-number {
   font-size: 1.5em;
   margin-right: 1em;
   display: flex;
   align-items: flex-end;
 }
+.control-buttons {
+  display: flex;
+  justify-content: end;
+}
 @media screen and (max-width: 500px) {
   .row {
-    display: block;
-  }
-  .results,
-  .buttons {
-    display: inline-flex;
-  }
-  .buttons.control {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+  }
+  .results {
+    margin-bottom: 0.5rem;
   }
 }
 </style>

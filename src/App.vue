@@ -5,12 +5,12 @@ import HistoryList from "./components/HistoryList.vue";
 </script>
 
 <template>
-  <h1 style="margin-bottom: 1em">
+  <h1 style="margin-bottom: 0.5rem">
     Mansions of Madness combination puzzle solver
   </h1>
   <ElementRow />
   <SelectionRow />
-  <h2 style="margin-bottom: 0.5em">History:</h2>
+  <h2 style="margin: 0.5rem 0">History:</h2>
   <HistoryList />
 </template>
 
@@ -18,6 +18,7 @@ import HistoryList from "./components/HistoryList.vue";
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 body {
   font-family: sans-serif;
@@ -31,42 +32,23 @@ body {
 .row {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
-.elements {
-  display: flex;
-}
-.element {
-  padding: 0.7em 1em;
-  font-size: 1.5em;
-  border: 1px solid #f9f5d7;
-  margin-right: 0.5em;
-}
-.element.selected {
-  color: #1d2021;
-  background: #f9f5d7;
-}
-.buttons {
-  display: flex;
-  align-items: center;
-}
-.buttons button {
-  padding: 0.7rem 0;
-  width: 4rem;
-  font-size: 2em;
-}
+
 @media screen and (max-width: 500px) {
-  .elements {
-    flex-wrap: wrap;
-  }
-  .row {
-    flex-direction: column;
-  }
-  .buttons {
-    margin: 1em 0;
-  }
   #app {
     padding: 0.5em;
     width: auto;
+  }
+  .row {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .incr-decr-buttons {
+    display: flex;
+    justify-content: center;
+    column-gap: 0.5rem;
   }
 }
 </style>
