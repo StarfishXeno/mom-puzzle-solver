@@ -59,7 +59,4 @@ const acceptSolution = (variant: number[]) => {
 .container h1 {
   margin-bottom: 0.5rem;
 }
-.buttons button {
-  width: 5rem;
-}
 </style>

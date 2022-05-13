@@ -47,7 +47,6 @@ const { removeFromHistory, resetHistory } = store;
   display: flex;
   align-items: center;
 }
-
 .item-number {
   font-size: 1.5em;
   margin-right: 1em;
@@ -60,9 +59,6 @@ const { removeFromHistory, resetHistory } = store;
 }
 @media screen and (max-width: 500px) {
   .row {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
   }
   .results {
