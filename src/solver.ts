@@ -34,25 +34,22 @@ export const checkSolution = (history: HistoryItem[], selected: number[]) => {
   return null;
 };
 
-const createAllPermutations = (elements: number[], length: number) => {
-  let res: number[][] = [];
-  const permute = (length: number, parent: number[][]): number[][] => {
-    if (length <= 1) {
-      return parent;
-    }
-    const res: number[][] = [];
-    for (const items of parent) {
-      for (const el of elements) {
-        res.push([...items, el]);
-      }
-    }
-
-    return permute(length - 1, res);
-  };
-  for (const el of elements) {
-    res = [...res, ...permute(length, [[el]])];
+const createAllPermutations = (
+  elements: number[],
+  length: number,
+  parent: number[][] = [[]]
+): number[][] => {
+  if (length <= 0) {
+    return parent;
   }
-  return res;
+  const res: number[][] = [];
+  for (const items of parent) {
+    for (const el of elements) {
+      res.push([...items, el]);
+    }
+  }
+
+  return createAllPermutations(elements, length - 1, res);
 };
 
 export const findSolutions = (

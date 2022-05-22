@@ -59,4 +59,9 @@ const acceptSolution = (variant: number[]) => {
 .container h1 {
   margin-bottom: 0.5rem;
 }
+@media screen and (min-width: 500px) {
+  button:deep() {
+    margin-left: 0.5rem;
+  }
+}
 </style>
